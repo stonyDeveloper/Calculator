@@ -10,10 +10,10 @@
     <title>Calculator</title>
 </head>
 
-<body>
+<body onload="clock()">
     <div class="container">
         <div class="screen">
-            <input type="text" id="display" placeholder="0">
+            <input type="text" id="display" placeholder="0" oninput="maxEntry()" disabled>
         </div>
 
         <div class="buttons">
@@ -36,7 +36,8 @@
             <button onclick="sqrt()">√</button>
             <button class="btn">0</button>
             <button class="btn">.</button>
-            <button class="orange" onclick="screen.value=eval(screen.value)">=</button>
+            <button class="orange" onclick="equal()">=</button>
+
 
         </div>
 
