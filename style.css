@@ -15,7 +15,7 @@ body {
     width: 300px;
     border-radius: 20px;
     position: relative;
-    box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.75);
+    /* box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.75); */
 }
 
 .screen input {
@@ -31,6 +31,13 @@ body {
     color: #fff;
 }
 
+.screen {
+    text-align: right;
+    color: #fff;
+    font-size: 30px;
+    width: 97%;
+}
+
 .buttons {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -39,6 +46,14 @@ body {
     background-color: #2a2d37;
     border-radius: 20px;
     height: 330px;
+}
+
+.span-two {
+    grid-row: 5/6;
+    grid-column: 3/5;
+    border: solid 0.2px #55b6a8;
+    font-size: 35px;
+    border-radius: 5px;
 }
 
 button {
@@ -109,4 +124,16 @@ button:hover {
         width: 100%;
         height: 410px;
     }
+}
+
+.previous-operand {
+    height: 110px;
+    padding-top: 100px;
+    color: #55b6a8;
+    font-size: 25px;
+}
+
+.new-operand {
+    height: 110px;
+    padding-top: 70px;
 }

@@ -1,92 +1,212 @@
-const btn = document.querySelectorAll(".btn");
+// const btn = document.querySelectorAll(".btn");
 
-const screen = document.getElementById("display");
+// const screen = document.getElementById("display");
 
-// Display Time
+// const result = document.querySelector(".result");
 
-function clock() {
-    const printTime = document.getElementById("time-paragraph");
+// // Display Time
 
-    const time = new Date();
-    setTimeout;
+// function clock() {
+//     const printTime = document.getElementById("time-paragraph");
 
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i;
-        } // add zero in front of numbers < 10
-        return i;
+//     const time = new Date();
+//     setTimeout;
+
+//     function checkTime(i) {
+//         if (i < 10) {
+//             i = "0" + i;
+//         } // add zero in front of numbers < 10
+//         return i;
+//     }
+
+//     let hours = time.getHours();
+
+//     hours = checkTime(hours);
+
+//     let minutes = time.getMinutes();
+
+//     minutes = checkTime(minutes);
+
+//     let seconds = time.getSeconds();
+
+//     seconds = checkTime(seconds);
+
+//     const timeOnly = hours + " : " + minutes;
+//     printTime.innerHTML = timeOnly;
+
+//     setTimeout(clock, 1000);
+// }
+// // To display selected options on screen
+// for (item of btn) {
+//     item.addEventListener("click", function(e) {
+//         btntext = e.target.innerText;
+//         if (btntext == "x") {
+//             btntext = "*";
+//         }
+
+//         if (btntext == "÷") {
+//             btntext = "/";
+//         }
+//         screen.value += btntext;
+
+//         if (screen.value.length > 9) {
+//             // screen.value = screen.value.substring(0, 12);
+//             screen.style.fontSize = "25px";
+//         } else {
+//             screen.style.fontSize = "35px";
+//         }
+
+//         // if (screen.value.length > 9) {
+//         //     screen.value = screen.value.slice(0, 19);
+//         // }
+//     });
+// }
+
+// // Square root function
+// function sqrt() {
+//     screen.value = Math.sqrt(screen.value);
+// }
+
+// // +/- function
+// function plusOrMinus() {
+//     if (screen.value > 0) {
+//         screen.value = "-" + screen.value;
+//     } else if (screen.value < 0) {
+//         screen.value *= -1;
+//     }
+// }
+
+// // % function
+// function percentage() {
+//     screen.value = screen.value / 100;
+// }
+
+// // let x = 100;
+// // x = x.toLocaleString("en-US");
+// // console.log(x);
+
+// function equal() {
+//     screen.value = eval(screen.value);
+//     // if (screen.value.length >= 19) {
+//     //     screen.value = "error";
+//     // }
+// }
+
+// Target my elements
+const numbers = document.querySelectorAll(".number");
+const operationButtons = document.querySelectorAll(".operation");
+const equal = document.querySelector(".equals");
+const clearScreen = document.querySelector(".clear");
+const deleteButton = document.querySelector(".delete");
+const previousOperandTextElement = document.querySelector(".previous-operand");
+const newOperandTextElement = document.querySelector(".new-operand");
+
+// Create a calculator class
+class Calculator {
+    constructor(previousOperandTextElement, newOperandTextElement) {
+        this.previousOperandTextElement = previousOperandTextElement;
+        this.newOperandTextElement = newOperandTextElement;
+        this.clearDisplay();
     }
 
-    let hours = time.getHours();
+    clearDisplay() {
+        this.newOperand = "";
+        this.previousOperand = "";
+        this.operation = "";
+    }
 
-    hours = checkTime(hours);
+    delete() {
+        this.newOperand = this.newOperand.toString().slice(0, -1);
+    }
 
-    let minutes = time.getMinutes();
+    appendNumber(number) {
+        if (number === "." && this.newOperand.includes(".")) return;
+        this.newOperand = this.newOperand.toString() + number.toString();
+    }
 
-    minutes = checkTime(minutes);
+    calculatorOperation(operation) {
+        if (this.newOperand === "") return;
+        if (this.previousOperand !== "") {
+            this.calculate();
+        }
+        this.operation = operation;
+        this.previousOperand = this.newOperand;
+        this.newOperand = "";
+    }
 
-    let seconds = time.getSeconds();
+    calculate() {
+        let calculation;
+        const last = parseFloat(this.previousOperand);
+        const current = parseFloat(this.newOperand);
 
-    seconds = checkTime(seconds);
+        if (isNaN(last) || isNaN(current)) return;
 
-    const timeOnly = hours + " : " + minutes;
-    printTime.innerHTML = timeOnly;
+        switch (this.operation) {
+            case "+":
+                calculation = last + current;
+                break;
+            case "-":
+                calculation = last - current;
+                break;
+            case "x":
+                calculation = last * current;
+                break;
+            case "÷":
+                calculation = last / current;
+                break;
+            case "%":
+                calculation = (last / 100) * current;
+                break;
 
-    setTimeout(clock, 1000);
-}
-// To display selected options on screen
-for (item of btn) {
-    item.addEventListener("click", function(item) {
-        btntext = item.target.innerText;
-        if (btntext == "x") {
-            btntext = "*";
+            default:
+                return;
         }
 
-        if (btntext == "÷") {
-            btntext = "/";
-        }
-        screen.value += btntext;
+        this.newOperand = calculation;
+        this.operation = undefined;
+        this.previousOperand = "";
+    }
 
-        if (screen.value.length > 9) {
-            // screen.value = screen.value.substring(0, 12);
-            screen.style.fontSize = "25px";
+    updateScreen() {
+        this.newOperandTextElement.innerText = this.newOperand;
+        if (this.operation != null) {
+            this.previousOperandTextElement.innerText = `${this.previousOperand} ${this.operation}`;
         } else {
-            screen.style.fontSize = "35px";
+            this.previousOperandTextElement.innerText = "";
         }
+    }
+}
 
-        if (screen.value.length > 18) {
-            delete screen.value;
-            screen.value = "";
-        }
+const calculator = new Calculator(
+    previousOperandTextElement,
+    newOperandTextElement
+);
+
+numbers.forEach((button) => {
+    button.addEventListener("click", () => {
+        calculator.appendNumber(button.innerText);
+        calculator.updateScreen();
     });
-}
+});
 
-// Square root function
-function sqrt() {
-    screen.value = Math.sqrt(screen.value);
-}
+operationButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        calculator.calculatorOperation(button.innerText);
+        calculator.updateScreen();
+    });
+});
 
-// +/- function
-function plusOrMinus() {
-    if (screen.value > 0) {
-        screen.value = "-" + screen.value;
-    } else if (screen.value < 0) {
-        screen.value *= -1;
-    }
-}
+equal.addEventListener("click", (button) => {
+    calculator.calculate();
+    calculator.updateScreen();
+});
 
-// % function
-function percentage() {
-    screen.value = screen.value / 100;
-}
+clearScreen.addEventListener("click", (button) => {
+    calculator.clearDisplay();
+    calculator.updateScreen();
+});
 
-// let x = 100;
-// x = x.toLocaleString("en-US");
-// console.log(x);
-
-function equal() {
-    screen.value = eval(screen.value);
-    if (screen.value.length >= 15) {
-        screen.value = "error";
-    }
-}
+deleteButton.addEventListener("click", (button) => {
+    calculator.delete();
+    calculator.updateScreen();
+});
